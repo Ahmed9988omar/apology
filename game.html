@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الأسئلة</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #ffe4e1;
+    }
+    .question {
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 2px solid #ff6f61;
+      border-radius: 10px;
+      max-width: 400px;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+    .options li {
+      margin: 10px 0;
+    }
+    .options button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #ff6f61;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .options button:hover {
+      background-color: #ff3d2e;
+    }
+    .retry-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      display: none;
+    }
+    .retry-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>أجب عن الأسئلة الثلاثة!</h1>
+  <div id="quiz" class="question">
+    <!-- السؤال الأول سيتم إدراجه هنا -->
+  </div>
+  <button id="retry" class="retry-btn" onclick="retry()">حاول مرة أخرى</button>
+
+  <script>
+    // قائمة الأسئلة والإجابات
+    const questions = [
+      {
+        question: "مين هو افضل شخص ",
+        options: ["سيجما", "سيجي" ,"محمد"],
+        correct: 2
+      },
+      {
+        question: "مين هو ثاني افضل شخص",
+        options: ["محمد", "سيجي", "سيجما" ],
+        correct: 0
+      },
+      {
+        question: "؟محمد منوب",
+        options: ["نعم", "Yes", "нет"],
+        correct: 2
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function showQuestion() {
+      const quiz = document.getElementById("quiz");
+      const retryBtn = document.getElementById("retry");
+
+      if (currentQuestion < questions.length) {
+        const q = questions[currentQuestion];
+        quiz.innerHTML = `
+          <h2>${q.question}</h2>
+          <ul class="options">
+            ${q.options
+              .map((option, index) => `<li><button onclick="checkAnswer(${index})">${option}</button></li>`)
+              .join("")}
+          </ul>
+        `;
+        retryBtn.style.display = "none";
+      } else {
+        if (score === questions.length) {
+          // إذا أجاب على جميع الأسئلة بشكل صحيح
+          quiz.innerHTML = `<h2>أحسنت! لقد أجبت على جميع الأسئلة بشكل صحيح! 🎉</h2>`;
+          setTimeout(() => {
+            window.location.href = "gift.html";
+          }, 2000);
+        } else {
+          // إذا لم يجاوب على جميع الأسئلة بشكل صحيح
+          quiz.innerHTML = `<h2>لقد أجبت على ${score} من ${questions.length} بشكل صحيح. حاول مرة أخرى!</h2>`;
+          retryBtn.style.display = "block";
+        }
+      }
+    }
+
+    function checkAnswer(index) {
+      if (index === questions[currentQuestion].correct) {
+        score++;
+      }
+      currentQuestion++;
+      showQuestion();
+    }
+
+    function retry() {
+      // إعادة تعيين المتغيرات وإظهار الأسئلة من جديد
+      currentQuestion = 0;
+      score = 0;
+      showQuestion();
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
